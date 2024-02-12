@@ -29,7 +29,7 @@ var (
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
-	Use:     "skeleton",
+	Use:     "fleet-rest-skeleton",
 	Short:   "basic rest server template",
 	Version: version.Current().String(),
 }

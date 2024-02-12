@@ -24,8 +24,16 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o "/${APP_NAME}" \
 
 FROM alpine:3.19.0
 ARG APP_NAME
+ENV APP_NAME=${APP_NAME}
 
+RUN echo "${APP_NAME}"
 RUN apk -U add curl
-COPY --from=build "${APP_NAME}" /equinix/bin/
 
-ENTRYPOINT ["/equinix/bin/${APP_NAME}"]
+COPY --from=build "${APP_NAME}" /fleet/${APP_NAME}
+
+RUN adduser -D fleet
+RUN chown -R fleet:fleet /fleet
+
+USER fleet
+
+ENTRYPOINT "/fleet/${APP_NAME}" "$0" "$@"

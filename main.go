@@ -18,6 +18,7 @@ package main
 import (
 	"github.com/metal-toolbox/fleet-rest-skeleton/cmd"
 	_ "github.com/metal-toolbox/fleet-rest-skeleton/cmd/server"
+	_ "github.com/metal-toolbox/fleet-rest-skeleton/cmd/version"
 )
 
 func main() {

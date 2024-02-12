@@ -6,7 +6,7 @@ GIT_SUMMARY := $(shell git describe --tags --dirty --always)
 VERSION     := $(shell git describe --tags 2> /dev/null)
 BUILD_DATE  := $(shell date +%s)
 GO_VERSION := $(shell expr `go version |cut -d ' ' -f3 |cut -d. -f2` \>= 20)
-LD_FLAG_LOCATION := github.com/metal-toolbox/${SERVICE_NAME}/internal/version
+LDFLAG_LOCATION := github.com/metal-toolbox/${SERVICE_NAME}/internal/version
 DOCKER_IMAGE  ?= ghcr.io/metal-toolbox/${SERVICE_NAME}
 
 .DEFAULT_GOAL := help
@@ -27,7 +27,8 @@ clean:
 
 image:
 	docker build -t ${DOCKER_IMAGE}:latest . \
-		--build-arg APP_NAME=${SERVICE_NAME} --build-arg LD_FLAG_LOCATION=${LD_FLAG_LOCATION} \
+		--build-arg APP_NAME=${SERVICE_NAME} \
+		--build-arg LDFLAG_LOCATION=${LDFLAG_LOCATION} \
 		--build-arg GIT_COMMIT=${GIT_COMMIT} --build-arg GIT_BRANCH=${GIT_BRANCH} \
 		--build-arg GIT_SUMMARY=${GIT_SUMMARY} --build-arg VERSION=${VERSION} \
 		--build-arg BUILD_DATE=${BUILD_DATE} 

@@ -1,6 +1,7 @@
 package version
 
 import (
+	"encoding/json"
 	"fmt"
 	"runtime"
 )
@@ -36,4 +37,12 @@ func Current() *Version {
 
 func (v *Version) String() string {
 	return fmt.Sprintf("version=%s ref=%s branch=%s built=%s", v.AppVersion, v.GitCommit, v.GitBranch, v.BuildDate)
+}
+
+func (v *Version) MustJSON() json.RawMessage {
+	byt, err := json.Marshal(v)
+	if err != nil {
+		panic("unable to marshal version")
+	}
+	return byt
 }

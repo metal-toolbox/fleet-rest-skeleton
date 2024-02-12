@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/metal-toolbox/fleet-rest-skeleton/internal/app"
 	"github.com/metal-toolbox/fleet-rest-skeleton/internal/metrics"
+	"github.com/metal-toolbox/fleet-rest-skeleton/internal/version"
 	"go.hollow.sh/toolbox/ginauth"
 	"go.hollow.sh/toolbox/ginjwt"
 	"go.uber.org/zap"
@@ -82,7 +83,11 @@ func ComposeHTTPServer(app *app.App) *http.Server {
 
 	// a liveness endpoint
 	g.GET("/_health/liveness", func(c *gin.Context) {
-		c.JSON(200, gin.H{"time": time.Now()})
+		c.JSON(http.StatusOK, gin.H{"time": time.Now()})
+	})
+
+	g.GET("/api/version", func(c *gin.Context) {
+		c.JSON(http.StatusOK, version.Current())
 	})
 
 	g.POST("/api/echo",
