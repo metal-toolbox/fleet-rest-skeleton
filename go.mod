@@ -1,6 +1,6 @@
 module github.com/metal-toolbox/fleet-rest-skeleton
 
-go 1.21.3
+go 1.21
 
 require (
 	github.com/equinix-labs/otel-init-go v0.0.9
