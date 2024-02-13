@@ -21,7 +21,7 @@ lint:
 test: lint
 	CGO_ENABLED=0 go test -timeout 1m -v -covermode=atomic ./...
 
-build: lint
+build: 
 	CGO_ENABLED=0 go build -o ${SERVICE_NAME} 
 
 clean:

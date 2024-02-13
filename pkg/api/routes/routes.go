@@ -55,12 +55,12 @@ func composeAppLogging(l *zap.Logger) gin.HandlerFunc {
 }
 
 // ComposeHTTPServer returns an http.Server that handles our API
-func ComposeHTTPServer(app *app.App) *http.Server {
-	if len(app.Cfg.JWTAuth) != 0 {
+func ComposeHTTPServer(theApp *app.App) *http.Server {
+	if len(theApp.Cfg.JWTAuth) != 0 {
 		var err error
-		authMiddleWare, err = ginjwt.NewMultiTokenMiddlewareFromConfigs(app.Cfg.JWTAuth...)
+		authMiddleWare, err = ginjwt.NewMultiTokenMiddlewareFromConfigs(theApp.Cfg.JWTAuth...)
 		if err != nil {
-			app.Log.Fatal(
+			theApp.Log.Fatal(
 				"failed to initialize auth middleware",
 				zap.Error(err),
 			)
@@ -69,12 +69,12 @@ func ComposeHTTPServer(app *app.App) *http.Server {
 
 	g := gin.New()
 
-	if !app.Cfg.DeveloperMode {
-		gin.SetMode(gin.Release)
+	if !theApp.Cfg.DeveloperMode {
+		gin.SetMode(gin.ReleaseMode)
 	}
 
 	// set up common middleware for logging and metrics
-	g.Use(composeAppLogging(app.Log), gin.Recovery())
+	g.Use(composeAppLogging(theApp.Log), gin.Recovery())
 
 	// some boilerplate setup
 	g.NoRoute(func(c *gin.Context) {
@@ -105,7 +105,7 @@ func ComposeHTTPServer(app *app.App) *http.Server {
 	// add other API endpoints to the gin Engine as required
 
 	return &http.Server{
-		Addr:         app.Cfg.ListenAddress,
+		Addr:         theApp.Cfg.ListenAddress,
 		Handler:      g,
 		ReadTimeout:  readTimeout,
 		WriteTimeout: writeTimeout,
@@ -157,6 +157,7 @@ func createScopes(items ...string) []string {
 	return s
 }
 
+//nolint:unused
 func readScopes(items ...string) []string {
 	s := []string{"read"}
 	for _, i := range items {
@@ -166,6 +167,7 @@ func readScopes(items ...string) []string {
 	return s
 }
 
+//nolint:unused
 func updateScopes(items ...string) []string {
 	s := []string{"write", "update"}
 	for _, i := range items {
@@ -175,6 +177,7 @@ func updateScopes(items ...string) []string {
 	return s
 }
 
+//nolint:unused
 func deleteScopes(items ...string) []string {
 	s := []string{"write", "delete"}
 	for _, i := range items {

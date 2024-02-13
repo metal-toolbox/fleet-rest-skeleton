@@ -31,25 +31,25 @@ jobs:
         uses: actions/checkout@v4
 
       - name: build binary
-        run: make build-linux
+        run: make build
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build Alloy Docker image - no push
-        id: dockerbuild-conditionorc
+      - name: Build Docker image - no push
+        id: docker-build
         uses: docker/build-push-action@v5
         with:
            context: .
            push: false
-           tags: ghcr.io/metal-toolbox/conditionorc:latest
+           tags: ghcr.io/metal-toolbox/fleet-rest-skeleton:latest
            file: Dockerfile
 
-      - name: Scan image - Alloy
-        id: scan-Alloy-image
+      - name: Scan image
+        id: scan-image
         uses: anchore/scan-action@v3
         with:
-          image: ghcr.io/metal-toolbox/conditionorc:latest
+          image: ghcr.io/metal-toolbox/fleet-rest-skeleton:latest
           acs-report-enable: true
           # TODO(joel): Fail build once we migrate off CentOS.
           fail-build: false
