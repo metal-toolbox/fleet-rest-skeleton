@@ -70,7 +70,7 @@ func ComposeHTTPServer(app *app.App) *http.Server {
 	g := gin.New()
 
 	if !app.Cfg.DeveloperMode {
-		gin.SetMode(gin.Release)
+		gin.SetMode(gin.ReleaseMode)
 	}
 
 	// set up common middleware for logging and metrics
