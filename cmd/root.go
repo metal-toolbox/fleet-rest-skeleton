@@ -44,5 +44,6 @@ func Execute() {
 }
 
 func init() {
-	RootCmd.PersistentFlags().StringVar(&CfgFile, "config", "skeleton.yaml", "default is ./skeleton.yaml")
+	RootCmd.PersistentFlags().StringVar(
+		&CfgFile, "config", "/etc/skeleton/config.yaml", "configuration file")
 }

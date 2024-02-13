@@ -69,6 +69,10 @@ func ComposeHTTPServer(app *app.App) *http.Server {
 
 	g := gin.New()
 
+	if !app.Cfg.DeveloperMode {
+		gin.SetMode(gin.Release)
+	}
+
 	// set up common middleware for logging and metrics
 	g.Use(composeAppLogging(app.Log), gin.Recovery())
 
@@ -95,7 +99,7 @@ func ComposeHTTPServer(app *app.App) *http.Server {
 		wrapAPICall(apiEcho))                         // api function, wrapped into middleware
 
 	g.POST("/api/error",
-		composeAuthHandler(createScopes("reponse")),
+		composeAuthHandler(createScopes("response")),
 		wrapAPICall(apiError))
 
 	// add other API endpoints to the gin Engine as required
@@ -118,7 +122,7 @@ func wrapAPICall(fn apiHandler) gin.HandlerFunc {
 		var responseCode int
 
 		m := make(map[string]any)
-		if err := ctx.BindJSON(m); err != nil {
+		if err := ctx.BindJSON(&m); err != nil {
 			ctx.JSON(http.StatusBadRequest, map[string]any{
 				"error": err.Error(),
 			})
@@ -143,36 +147,6 @@ func composeAuthHandler(scopes []string) gin.HandlerFunc {
 	}
 	return authMiddleWare.AuthRequired(scopes)
 }
-
-/*func (r *Routes) Routes(g *gin.RouterGroup) {
-	servers := g.Group("/servers/:uuid")
-
-	serverEnroll := g.Group("/serverEnroll")
-	serverEnroll.POST("/:uuid", r.composeAuthHandler(createScopes("server")), wrapAPICall(r.serverEnroll))
-	// Create a new server ID when uuid is not provided.
-	serverEnroll.POST("/", r.composeAuthHandler(createScopes("server")), wrapAPICall(r.serverEnroll))
-	servers.DELETE("", r.composeAuthHandler(createScopes("server")), wrapAPICall(r.serverDelete))
-
-	{
-		// Combined API for firmwareInstall
-		servers.POST("/firmwareInstall", r.composeAuthHandler(createScopes("condition")),
-			wrapAPICall(r.firmwareInstall))
-
-		// Generalized API for any condition status (for cases where some server work
-		// has multiple conditions involved and the caller doesn't know what they might be)
-		servers.GET("/status", r.composeAuthHandler(readScopes("condition")),
-			wrapAPICall(r.conditionStatus))
-
-		// /servers/:uuid/condition/:conditionKind
-		serverConditionBySlug := servers.Group("/condition")
-
-		// Create a condition on a server.
-		// XXX: refactor me! see comments
-		serverConditionBySlug.POST("/:conditionKind",
-			r.composeAuthHandler(createScopes("condition")),
-			wrapAPICall(r.serverConditionCreate))
-	}
-}*/
 
 func createScopes(items ...string) []string {
 	s := []string{"write", "create"}

@@ -8,6 +8,8 @@ BUILD_DATE  := $(shell date +%s)
 GO_VERSION := $(shell expr `go version |cut -d ' ' -f3 |cut -d. -f2` \>= 20)
 LDFLAG_LOCATION := github.com/metal-toolbox/${SERVICE_NAME}/internal/version
 DOCKER_IMAGE  ?= ghcr.io/metal-toolbox/${SERVICE_NAME}
+SANDBOX_IMAGE ?= localhost:5001/${SERVICE_NAME}
+SANDBOX_TEMPLATE_DIR ?= ${HOME}/Development/sandbox/templates
 
 .DEFAULT_GOAL := help
 
@@ -33,13 +35,19 @@ image:
 		--build-arg GIT_SUMMARY=${GIT_SUMMARY} --build-arg VERSION=${VERSION} \
 		--build-arg BUILD_DATE=${BUILD_DATE} 
 
-push-image-devel: image
-	docker tag ${DOCKER_IMAGE}:latest localhost:5001/${SERVICE_NAME}:latest
+push-sandbox-image: image
+	docker tag ${DOCKER_IMAGE}:latest ${SANDBOX_IMAGE}:latest
 	docker push localhost:5001/${SERVICE_NAME}:latest
 	kind load docker-image localhost:5001/${SERVICE_NAME}:latest
 
 push-image: image
 	docker push ${DOCKER_IMAGE}:latest
+
+load-sandbox:
+	@cp sandbox/service.yaml "${SANDBOX_TEMPLATE_DIR}/skeleton-service.yaml"
+	@cp sandbox/deployment.yaml "${SANDBOX_TEMPLATE_DIR}/skeleton-deployment.yaml"
+	@cp sandbox/configmap.yaml "${SANDBOX_TEMPLATE_DIR}/skeleton-configmap.yaml"
+	@echo "Be sure to do a helm (re)load to get the service started"
 
 # https://gist.github.com/prwhite/8168133
 # COLORS
