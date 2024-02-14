@@ -43,10 +43,13 @@ push-sandbox-image: image
 push-image: image
 	docker push ${DOCKER_IMAGE}:latest
 
+# if you want to use the sandbox repo, this target puts the files from this service in place. You will
+# need to update the sandbox Makefile to get helm to load everything properly.
 load-sandbox:
-	@cp sandbox/service.yaml "${SANDBOX_TEMPLATE_DIR}/skeleton-service.yaml"
-	@cp sandbox/deployment.yaml "${SANDBOX_TEMPLATE_DIR}/skeleton-deployment.yaml"
-	@cp sandbox/configmap.yaml "${SANDBOX_TEMPLATE_DIR}/skeleton-configmap.yaml"
+	@cp helm/values.yaml "${SANDBOX_TEMPLATE_DIR}/skeleton-values.yaml"
+	@cp helm/service.yaml "${SANDBOX_TEMPLATE_DIR}/skeleton-service.yaml"
+	@cp helm/deployment.yaml "${SANDBOX_TEMPLATE_DIR}/skeleton-deployment.yaml"
+	@cp helm/configmap.yaml "${SANDBOX_TEMPLATE_DIR}/skeleton-configmap.yaml"
 	@echo "Be sure to do a helm (re)load to get the service started"
 
 # https://gist.github.com/prwhite/8168133
