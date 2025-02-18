@@ -47,7 +47,7 @@ jobs:
 
       - name: Scan image
         id: scan-image
-        uses: anchore/scan-action@v3
+        uses: anchore/scan-action@v6
         with:
           image: ghcr.io/metal-toolbox/fleet-rest-skeleton:latest
           acs-report-enable: true
