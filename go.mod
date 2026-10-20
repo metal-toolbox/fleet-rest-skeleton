@@ -1,6 +1,6 @@
 module github.com/metal-toolbox/fleet-rest-skeleton
 
-go 1.21
+go 1.24
 
 require (
 	github.com/equinix-labs/otel-init-go v0.0.9
@@ -34,7 +34,7 @@ require (
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/klauspost/compress v1.17.9 // indirect
+	github.com/klauspost/compress v1.18.7 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.6 // indirect
 	github.com/leodido/go-urn v1.2.4 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
